@@ -1,8 +1,8 @@
 package main
 
 import (
-	"NotionRest/notion"
 	"github.com/gin-gonic/gin"
+	"github.com/harinugroho/notion"
 )
 
 func main() {

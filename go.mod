@@ -2,7 +2,10 @@ module NotionRest
 
 go 1.18
 
-require github.com/gin-gonic/gin v1.9.0
+require (
+	github.com/gin-gonic/gin v1.9.0
+	github.com/harinugroho/notion v0.0.0-20230303093319-ba276573ee22
+)
 
 require (
 	github.com/bytedance/sonic v1.8.0 // indirect
