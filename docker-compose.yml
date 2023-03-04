@@ -1,0 +1,35 @@
+version: "3"
+services:
+  application:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: notion-rest
+    container_name: notion-rest-application
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: notion-rest-application
+      SERVICE_TAGS: dev
+    working_dir: /app
+    volumes:
+      - ./:/app
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.notion-rest.entrypoints=http"
+      - "traefik.http.routers.notion-rest.rule=Host(`${APP_HOST}`)"
+      - "traefik.http.middlewares.notion-rest-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.notion-rest.middlewares=notion-rest-https-redirect"
+      - "traefik.http.routers.notion-rest-secure.entrypoints=https"
+      - "traefik.http.routers.notion-rest-secure.rule=Host(`${APP_HOST}`)"
+      - "traefik.http.routers.notion-rest-secure.tls=true"
+      - "traefik.http.routers.notion-rest-secure.tls.certresolver=http"
+      - "traefik.http.routers.notion-rest-secure.service=notion-rest"
+      - "traefik.http.services.notion-rest.loadbalancer.server.port=8080"
+      - "traefik.docker.network=proxy"
+
+networks:
+  proxy:
+    external: true
