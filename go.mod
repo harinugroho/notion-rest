@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/gin-gonic/gin v1.9.0
-	github.com/harinugroho/notion v0.0.2
+	github.com/harinugroho/notion v0.0.8
 )
 
 require (

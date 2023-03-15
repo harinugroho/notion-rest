@@ -7,46 +7,36 @@ import (
 
 func main() {
 	r := gin.Default()
-	r.GET("/databases/:id", getList)
-	r.GET("/databases/:id/info", getInfo)
-	r.GET("/databases/:id/columns", getColumns)
+	r.GET("/databases", getDatabase)
+	r.POST("/databases/query", getList)
 	err := r.Run()
 	if err != nil {
 		panic(err)
 	}
 }
 
-func getInfo(c *gin.Context) {
-	id := c.Param("id")
-	secret := c.Request.Header["Integration-Token"][0]
-	database := notion.NewDatabase(secret, id)
-	info := database.GetInfo()
+func getDatabase(c *gin.Context) {
+	integrationToken := c.Query("integration_token")
+	databaseUrl := c.Query("database_url")
+	client, err := notion.NewClient(integrationToken).SetDatabaseIdByUrl(databaseUrl).GetDatabase()
+	if err != nil {
+		panic(err)
+	}
 
 	c.JSON(200, gin.H{
-		"data": info,
-	})
-}
-
-func getColumns(c *gin.Context) {
-	id := c.Param("id")
-	secret := c.Request.Header["Integration-Token"][0]
-	database := notion.NewDatabase(secret, id)
-	columns := database.GetColumns()
-
-	c.JSON(200, gin.H{
-		"data": columns,
+		"data": client.GetObject(),
 	})
 }
 
 func getList(c *gin.Context) {
-	id := c.Param("id")
-	secret := c.Request.Header["Integration-Token"][0]
-	list := notion.NewList(secret, id)
-	data, err := list.QueryDatabase()
+	integrationToken := c.Query("integration_token")
+	databaseUrl := c.Query("database_url")
+	client, err := notion.NewClient(integrationToken).SetDatabaseIdByUrl(databaseUrl).GetList()
 	if err != nil {
 		panic(err)
 	}
+
 	c.JSON(200, gin.H{
-		"data": data,
+		"data": client.GetObject(),
 	})
 }
