@@ -27,7 +27,7 @@ services:
       - "traefik.http.routers.notion-rest-secure.tls=true"
       - "traefik.http.routers.notion-rest-secure.tls.certresolver=http"
       - "traefik.http.routers.notion-rest-secure.service=notion-rest"
-      - "traefik.http.services.notion-rest.loadbalancer.server.port=8080"
+      - "traefik.http.services.notion-rest.loadbalancer.server.port=9000"
       - "traefik.docker.network=proxy"
 
 networks:
