@@ -8,8 +8,15 @@ import (
 
 func main() {
 	app := fiber.New()
-	app.Get("/databases", getDatabase)
-	app.Post("/databases/query", getList)
+
+	// web
+	app.Static("/static", "./ui/dist/static")
+	app.Get("/web/*", getView)
+
+	// api
+	app.Get("/api/v1/databases", getDatabase)
+	app.Post("/api/v1/databases/query", getList)
+
 	err := app.Listen("0.0.0.0:9000")
 	if err != nil {
 		panic(err)
@@ -61,4 +68,8 @@ func getList(c *fiber.Ctx) error {
 		"data":       result.GetObject(),
 		"properties": result.GetProperties(),
 	})
+}
+
+func getView(c *fiber.Ctx) error {
+	return c.SendFile("./ui/dist/index.html")
 }
